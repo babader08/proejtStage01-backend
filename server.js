@@ -11,6 +11,7 @@ const {
   addProduct,
   getAllProducts,
 } = require("./Controller/productsController");
+const pool = require("./config/db");
 
 // Initialisation pour le Firebase
 let serviceAccount;
@@ -29,6 +30,28 @@ admin.initializeApp({
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+const createTable = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        id SERIAL PRIMARY KEY,
+        namehotels VARCHAR(255),
+        adresse VARCHAR(255),
+        price VARCHAR(50),
+        image_url TEXT,
+        number VARCHAR(50),
+        devise VARCHAR(10),
+        email VARCHAR(255)
+      );
+    `);
+    console.log("✅ Table 'products' prête !");
+  } catch (err) {
+    console.error("❌ Erreur lors de la création de la table:", err);
+  }
+};
+
+createTable();
 
 app.use(
   cors({
