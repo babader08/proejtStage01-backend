@@ -40,10 +40,8 @@ const getAllProducts = async (req, res) => {
 
     res.status(200).json(result.rows);
   } catch (error) {
-    console.error("Erreur récupération:", error);
-    res
-      .status(500)
-      .json({ message: "Erreur lors de la récupération des hôtels" });
+    console.error("❌ ERREUR DÉTAILLÉE AJOUT:", error); // Cela apparaîtra dans les logs Render
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 };
 
