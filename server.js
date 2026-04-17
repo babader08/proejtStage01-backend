@@ -4,6 +4,14 @@ const cors = require("cors");
 const path = require("path"); //pour gérer les chemins de fichiers
 require("dotenv").config();
 
+const fs = require("fs");
+const uploadDir = "./uploads";
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+  console.log("📁 Dossier 'uploads' créé dynamiquement");
+}
+
 // ce sont les middlewares et les contrôleurs
 const verifyToken = require("./middlewares/authMiddleware");
 const upload = require("./middlewares/uploadMiddleware");
