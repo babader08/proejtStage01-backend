@@ -13,22 +13,26 @@ const {
 } = require("./Controller/productsController");
 
 // Initialisation pour le Firebase
-const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT
-  ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
-  : require("./config/serviceAccountKey.json");
+let serviceAccount;
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  // Sur Render : On lit la variable d'environnement que tu as créée
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+} else {
+  // Sur ton Mac : On lit le fichier local
+  serviceAccount = require("./config/serviceAccountKey.json");
 }
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://projet-stage-01.vercel.app/"],
+    origin: ["http://localhost:5173", "https://projet-stage-01.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -54,7 +58,7 @@ app.use(express.urlencoded({ extended: true })); // ce code permet lire et trait
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.post("/api/products", upload.single("image_url"), addProduct);
+app.post("/api/products", verifyToken, upload.single("image_url"), addProduct);
 app.get("/api/products", getAllProducts);
 
 app.listen(PORT, () => {
