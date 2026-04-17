@@ -26,7 +26,8 @@ const addProduct = async (req, res) => {
       .status(201)
       .json({ message: "Hôtel ajouté via Cloudinary !", data: result.rows[0] });
   } catch (error) {
-    res.status(500).json({ message: "Erreur Cloudinary/DB" });
+    console.error("❌ ERREUR DÉTAILLÉE AJOUT:", error); // Cela apparaîtra dans les logs Render
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 };
 
@@ -40,8 +41,10 @@ const getAllProducts = async (req, res) => {
 
     res.status(200).json(result.rows);
   } catch (error) {
-    console.error("❌ ERREUR DÉTAILLÉE AJOUT:", error); // Cela apparaîtra dans les logs Render
-    res.status(500).json({ message: "Erreur serveur", error: error.message });
+    console.error("Erreur récupération:", error);
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération des hôtels" });
   }
 };
 
