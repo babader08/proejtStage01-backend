@@ -41,21 +41,23 @@ const PORT = process.env.PORT || 8080;
 
 const createTable = async () => {
   try {
+    await pool.query(`DROP TABLE IF EXISTS products;`);
+
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS products (
+      CREATE TABLE products (
         id SERIAL PRIMARY KEY,
-        namehotels VARCHAR(255),
-        adresse VARCHAR(255),
-        price VARCHAR(50),
+        namehotels VARCHAR(255) NOT NULL,
+        adresse VARCHAR(255) NOT NULL,
+        price VARCHAR(50) NOT NULL,
         image_url TEXT,
-        number VARCHAR(50),
+        phone_number VARCHAR(50), 
         devise VARCHAR(10),
         email VARCHAR(255)
       );
     `);
-    console.log("✅ Table 'products' prête !");
+    console.log("✅ Table 'products' recréée proprement !");
   } catch (err) {
-    console.error("❌ Erreur lors de la création de la table:", err);
+    console.error("❌ Erreur SQL:", err);
   }
 };
 
