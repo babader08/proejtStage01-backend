@@ -41,10 +41,8 @@ const PORT = process.env.PORT || 8080;
 
 const createTable = async () => {
   try {
-    await pool.query(`DROP TABLE IF EXISTS products;`);
-
     await pool.query(`
-      CREATE TABLE products (
+      CREATE TABLE IF NOT EXISTS products (
         id SERIAL PRIMARY KEY,
         namehotels VARCHAR(255) NOT NULL,
         adresse VARCHAR(255) NOT NULL,
@@ -55,12 +53,11 @@ const createTable = async () => {
         email VARCHAR(255)
       );
     `);
-    console.log("✅ Table 'products' recréée proprement !");
+    console.log("✅ Table 'products' vérifiée (les données sont conservées).");
   } catch (err) {
     console.error("❌ Erreur SQL:", err);
   }
 };
-
 createTable();
 
 app.use(
